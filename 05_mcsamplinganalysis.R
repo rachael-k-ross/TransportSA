@@ -162,10 +162,10 @@ fromdraws <- trapdraws |>
 
 table(fromdraws$flag1)
 table(fromdraws$flag2)
-round(summary(fromdraws$margadh_ntx),3)
-round(summary(fromdraws$margadh_bup),3)
-round(summary(fromdraws$margadh_ntx[fromdraws$flag1==0]),3)
-round(summary(fromdraws$margadh_bup[fromdraws$flag1==0]),3)
+round(summary(fromdraws$margadh_ntx),2)
+round(summary(fromdraws$margadh_bup),2)
+round(summary(fromdraws$margadh_ntx[fromdraws$flag1==0]),2)
+round(summary(fromdraws$margadh_bup[fromdraws$flag1==0]),2)
 
 scatdeltas <- ggplot(data=fromdraws,aes(x=delta0,
                                         y=delta1,
@@ -229,7 +229,7 @@ fullresults <- cbind(fromdraws,reduce(results,rbind)) |>
 getquantiles <- function(data){
   round(c(quantile(data,0.5),
     quantile(data,0.025),
-    quantile(data,0.975)),3)
+    quantile(data,0.975)),2)
 }
 
 # Simulation results

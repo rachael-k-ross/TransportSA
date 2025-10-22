@@ -48,6 +48,8 @@ source(paste0(home,code,"forgit/00_analysisfxs.R"))
 
 # Colors
 mycolors <- c("#72925f","#925f72")
+mycolors <- c("darkgray","darkgray")
+mycolors <- c("#525252","#525252")
 
 # For saving figures
 savefig <- function(fig,w,h){
@@ -160,7 +162,8 @@ toplotadh <- function(trt,color,label1x,label1y,
                  aes(x=adh,
                      group =group,
                      alpha=group,
-                     linewidth=group),
+                     linewidth=group,
+                     y=after_stat(scaled)),
                  #colour=trt,
                  #fill=trt)
                  #alpha=.2,
@@ -169,16 +172,17 @@ toplotadh <- function(trt,color,label1x,label1y,
                  trim=TRUE,
                  #linewidth=0.7
                  ) +
-    ylab("Density") +
+    ylab("Scaled density") +
     xlab("Probability of adherence") +
     theme_classic() +
     scale_x_continuous(limits=c(0,1)) +
+    scale_y_continuous(breaks=seq(0,1,by=0.2)) +
     annotate("text", x=label1x, y=label1y, 
-             label= as.character(label1),parse=TRUE,size=3) +
+             label= as.character(label1),parse=TRUE,size=2.7) +
     annotate("text", x=label2x, y=label2y, 
-             label= as.character(label2),parse=TRUE,size=3) +
+             label= as.character(label2),parse=TRUE,size=2.7) +
     annotate("text", x=label3x, y=label3y, 
-             label= as.character(label3),parse=TRUE,size=3) +
+             label= as.character(label3),parse=TRUE,size=2.7) +
     annotate("text", x=.03, y=tagy, 
              label= trt,size=3) +
     scale_alpha_manual(values=c(0.1,0.4,0.8)) +
@@ -191,16 +195,27 @@ toplotadh <- function(trt,color,label1x,label1y,
     #scale_y_continuous(limits=c(0,40))
 }
 
+# ntxadh <- toplotadh("XR-NTX",mycolors[2],
+#                     0.79,3,
+#                     0.52,8,
+#                     0.23,10,
+#                     12)
+# bupadh <- toplotadh("BUP-NX",mycolors[1],
+#                     0.96,45,
+#                     0.74,65,
+#                     .40,90,
+#                     115)
+
 ntxadh <- toplotadh("XR-NTX",mycolors[2],
-                    0.79,3,
-                    0.52,8,
-                    0.23,10,
-                    12)
+                    0.80,.4,
+                    0.51,.98,
+                    0.22,.9,
+                    1)
 bupadh <- toplotadh("BUP-NX",mycolors[1],
-                    0.96,45,
-                    0.74,65,
-                    .40,90,
-                    115)
+                    0.97,.6,
+                    0.75,.75,
+                    .39,.9,
+                    1)
 adhplot1 <- ntxadh/bupadh #+ plot_annotation(tag_levels = "A")
 adhplot1
 
@@ -217,9 +232,9 @@ ntxadhsum <- summary(preds_s0$z1hat_1)
 bupadhsum <- summary(preds_s0$z1hat_0)
 
 foradhtable <- function(summary){
-  rbind(round(c(summary[[4]],summary[[3]],summary[[2]],summary[[5]]),3),
-  round(c(summary[[4]]*.75,summary[[3]]*.75,summary[[2]]*.75,summary[[5]]*.75),3),
-  round(c(summary[[4]]*.5,summary[[3]]*.5,summary[[2]]*.5,summary[[5]]*.5),3))
+  rbind(round(c(summary[[4]],summary[[3]],summary[[2]],summary[[5]]),2),
+  round(c(summary[[4]]*.75,summary[[3]]*.75,summary[[2]]*.75,summary[[5]]*.75),2),
+  round(c(summary[[4]]*.5,summary[[3]]*.5,summary[[2]]*.5,summary[[5]]*.5),2))
 }
 foradhtable(ntxadhsum)
 foradhtable(bupadhsum)
@@ -273,13 +288,13 @@ mean(preds_s1$y[preds_s1$a==0])
 mean(preds_s1$y[preds_s1$a==1])-mean(preds_s1$y[preds_s1$a==0])
 
 ## Adjusted trial results
-gettrialresults(trialestimator(preds))
+round(gettrialresults(trialestimator(preds)),2)
 
 ## Transport results assuming no trial effects
-getresults(oldestimator(preds))
+round(getresults(oldestimator(preds)),2)
 
 ## New estimand: Approach A
 #getresults(newestimator(preds,1,1)) #just to compare to old estimator
-getresults(newestimator(preds,0.75,0.75))
-getresults(newestimator(preds,0.5,0.5))
+round(getresults(newestimator(preds,0.75,0.75)),2)
+round(getresults(newestimator(preds,0.5,0.5)),2)
 #getresults(newestimator(preds,0.75,0.5))
